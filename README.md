@@ -1,4 +1,2 @@
-- Hi, I’m @rajuj0
-- I’m  DevOps enthusiast 
-- I’m currently learning DSA and Algorithms 
-- I’m looking to collaborate on DevOps tools automation projects!!!!
+- Hi, here rajuj0 ,DevOps enthusiast 
+Currently learning DSA and Algorithms , I’m looking to collaborate on DevOps tools automation projects!!!!
