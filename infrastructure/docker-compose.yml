@@ -1,0 +1,137 @@
+version: '3.9'
+services:
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_DB: platform
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  analytics-db:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_DB: analytics
+    ports:
+      - "5433:5432"
+    volumes:
+      - analyticsdata:/var/lib/postgresql/data
+
+  cache:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+  api-gateway:
+    build: ../api-gateway
+    environment:
+      API_GATEWAY_PORT: 4000
+      DATABASE_URL: postgres://postgres:postgres@postgres:5432/platform
+      REDIS_URL: redis://cache:6379
+      AMQP_URL: amqp://rabbitmq:5672
+    ports:
+      - "4000:4000"
+    depends_on:
+      - patient-service
+      - user-service
+      - analytics-service
+      - review-service
+      - booking-service
+      - notification-service
+
+  patient-service:
+    build: ../microservices/patient-service
+    environment:
+      PATIENT_SERVICE_PORT: 4001
+      PATIENT_SERVICE_DATABASE_URL: postgres://postgres:postgres@postgres:5432/platform
+      REDIS_URL: redis://cache:6379
+    depends_on:
+      - postgres
+      - cache
+
+  user-service:
+    build: ../microservices/user-management-service
+    environment:
+      USER_SERVICE_PORT: 4002
+      USER_SERVICE_DATABASE_URL: postgres://postgres:postgres@postgres:5432/platform
+      REDIS_URL: redis://cache:6379
+    depends_on:
+      - postgres
+      - cache
+
+  analytics-service:
+    build: ../microservices/analytics-service
+    environment:
+      ANALYTICS_SERVICE_PORT: 4003
+      ANALYTICS_DB_URL: postgres://postgres:postgres@analytics-db:5432/analytics
+      ANALYTICS_QUEUE: analytics
+      AMQP_URL: amqp://rabbitmq:5672
+    depends_on:
+      - analytics-db
+      - rabbitmq
+
+  review-service:
+    build: ../microservices/review-scheduling-service
+    environment:
+      REVIEW_SERVICE_PORT: 4004
+      REVIEW_SERVICE_DATABASE_URL: postgres://postgres:postgres@postgres:5432/platform
+    depends_on:
+      - postgres
+
+  booking-service:
+    build: ../microservices/booking-service
+    environment:
+      BOOKING_SERVICE_PORT: 4005
+      BOOKING_SERVICE_DATABASE_URL: postgres://postgres:postgres@postgres:5432/platform
+      BOOKING_QUEUE: bookings
+      AMQP_URL: amqp://rabbitmq:5672
+    depends_on:
+      - postgres
+      - rabbitmq
+
+  notification-service:
+    build: ../microservices/notification-service
+    environment:
+      NOTIFICATION_SERVICE_PORT: 4006
+      NOTIFICATION_SERVICE_DATABASE_URL: postgres://postgres:postgres@postgres:5432/platform
+    depends_on:
+      - postgres
+
+  background-workers:
+    build: ../background-workers
+    environment:
+      DATABASE_URL: postgres://postgres:postgres@postgres:5432/platform
+      ANALYTICS_DB_URL: postgres://postgres:postgres@analytics-db:5432/analytics
+      BOOKING_QUEUE: bookings
+      ANALYTICS_QUEUE: analytics
+      AMQP_URL: amqp://rabbitmq:5672
+    depends_on:
+      - rabbitmq
+      - postgres
+      - analytics-db
+      - notification-service
+
+  customer-app:
+    build: ../client-apps/customer-app
+    environment:
+      NODE_ENV: production
+      NEXT_TELEMETRY_DISABLED: 1
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api-gateway
+
+volumes:
+  pgdata:
+  analyticsdata:
