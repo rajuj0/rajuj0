@@ -1,0 +1,11 @@
+version: '3.9'
+services:
+  customer-app:
+    build: ../client-apps/customer-app
+    environment:
+      NODE_ENV: production
+      NEXT_TELEMETRY_DISABLED: 1
+      PORT: 3000
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
