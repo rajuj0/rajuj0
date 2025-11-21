@@ -23,42 +23,7 @@ This repository contains a mono-repo that groups client applications, an API gat
 The `client-apps/customer-app` directory contains a statically rendered MVP website that communicates the product pillars,
 architecture, roadmap, and SLAs for Barbertop.
 
-## Quick steps: host the customer website locally
-
-Follow these copy/paste commands to view the Barbertop MVP site on your machine. Docker is the only requirement for this path.
-
-1) Clone the repo and enter it:
-```bash
-git clone <repo-url>
-cd rajuj0
-```
-
-2) (Optional) copy the environment template to keep defaults consistent:
-```bash
-cp .env.example .env
-```
-
-3) Build and host the customer site with Docker:
-```bash
-make host-customer
-```
-This uses `infrastructure/docker-compose.customer.yml` to start the site on `http://localhost:3000`.
-
-4) Stop the container when finished:
-```bash
-docker compose -f infrastructure/docker-compose.customer.yml down
-```
-
-If port 3000 is busy, set `PORT=3001` in a `.env` file before running step 3.
-
-See [`docs/host-customer.md`](docs/host-customer.md) for a more detailed walkthrough and troubleshooting tips.
-
-## Customer Web App (MVP)
-
-The `client-apps/customer-app` directory contains a statically rendered MVP website that communicates the product pillars,
-architecture, roadmap, and SLAs for Barbertop.
-
-**Run locally (Node dev server)**
+**Run locally**
 
 ```bash
 # install dependencies then start the dev server
@@ -67,6 +32,14 @@ make dev-customer
 ```
 
 Open `http://localhost:3000` to preview the MVP page.
+
+**Host the website with Docker only**
+
+```bash
+make host-customer
+```
+
+This builds and serves the customer app at `http://localhost:3000` without starting the rest of the stack.
 
 ## Getting Started
 
