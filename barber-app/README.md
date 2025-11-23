@@ -27,14 +27,27 @@ You can export this directory into a fresh repository automatically:
 ./scripts/create_repo.sh ../barber-app-repo
 ```
 
-The script copies the app (excluding build artifacts), initializes git, and makes the first commit. If you prefer to do it manually, run:
+The script copies the app (excluding build artifacts), initializes git, and makes the first commit. If you want it to also set a remote and push (for example, to https://github.com/rajuj0/barbertop.git), pass the remote URL as the second argument:
+
+```bash
+# from inside barber-app
+./scripts/create_repo.sh ../barber-app-repo https://github.com/rajuj0/barbertop.git
+```
+
+The script will:
+1) copy to the target directory;
+2) initialize git (if needed);
+3) set origin to the provided remote;
+4) push the main branch with the initial commit.
+
+If you prefer to do it manually, run:
 
 ```bash
 git init
 git add .
 git commit -m "Initialize BarberTop app"
 ```
-Then push to your preferred remote:
+Then push to your preferred remote (ensure your GitHub CLI or PAT authentication is configured first):
 ```bash
 git remote add origin <YOUR_REMOTE_URL>
 git push -u origin main

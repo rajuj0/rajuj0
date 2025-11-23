@@ -2,11 +2,13 @@
 set -euo pipefail
 
 # Simple helper to export the standalone barber app into a fresh Git repository.
-# Usage: ./scripts/create_repo.sh [output_directory]
-# If no output_directory is provided, ../barber-app-repo will be used.
+# Usage: ./scripts/create_repo.sh [output_directory] [remote_url]
+# - output_directory: where the repo should be created (defaults to ../barber-app-repo)
+# - remote_url: optional git remote to set and push to (e.g., https://github.com/rajuj0/barbertop.git)
 
 SOURCE_DIR=$(cd "$(dirname "$0")/.." && pwd)
 OUTPUT_DIR=${1:-"${SOURCE_DIR}/../barber-app-repo"}
+REMOTE_URL=${2:-""}
 
 # Prepare output directory
 if [ -d "$OUTPUT_DIR/.git" ]; then
@@ -38,6 +40,20 @@ if [ ! -d .git ]; then
   echo "[INFO] Initialized git repository and created initial commit."
 else
   echo "[INFO] Skipped git init; repository already exists."
+fi
+
+if [ -n "$REMOTE_URL" ]; then
+  if git remote | grep -q '^origin$'; then
+    git remote set-url origin "$REMOTE_URL"
+    echo "[INFO] Updated existing origin remote to $REMOTE_URL"
+  else
+    git remote add origin "$REMOTE_URL"
+    echo "[INFO] Added origin remote pointing to $REMOTE_URL"
+  fi
+
+  git branch -M main
+  git push -u origin main
+  echo "[SUCCESS] Pushed initial commit to $REMOTE_URL"
 fi
 
 echo "[SUCCESS] Barber app exported to: $OUTPUT_DIR"
