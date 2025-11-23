@@ -1,0 +1,33 @@
+# Barber App (Standalone)
+
+This directory contains a standalone copy of the BarberTop customer-facing site so you can host it as its own repository.
+
+## Quick start
+1. Install dependencies:
+   ```bash
+   npm install
+   ```
+2. Run the dev server:
+   ```bash
+   npm run dev
+   ```
+3. Open http://localhost:3000 to preview the landing experience.
+
+## Building for production
+```bash
+npm run build
+npm start
+```
+
+## Creating a dedicated Git repository
+If you want this app in its own Git repo, from inside `barber-app` run:
+```bash
+git init
+git add .
+git commit -m "Initialize BarberTop app"
+```
+Then push to your preferred remote:
+```bash
+git remote add origin <YOUR_REMOTE_URL>
+git push -u origin main
+```
