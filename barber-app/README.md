@@ -20,7 +20,15 @@ npm start
 ```
 
 ## Creating a dedicated Git repository
-If you want this app in its own Git repo, from inside `barber-app` run:
+You can export this directory into a fresh repository automatically:
+
+```bash
+# from inside barber-app
+./scripts/create_repo.sh ../barber-app-repo
+```
+
+The script copies the app (excluding build artifacts), initializes git, and makes the first commit. If you prefer to do it manually, run:
+
 ```bash
 git init
 git add .
