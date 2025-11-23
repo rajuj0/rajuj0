@@ -216,6 +216,13 @@ main {
   color: #e2e8f0;
 }
 
+.pill-grid {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+
 .chip {
   background: rgba(124, 240, 201, 0.12);
   color: #b5ffe0;
@@ -395,6 +402,52 @@ select {
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
+}
+
+.steps {
+  display: grid;
+  gap: 12px;
+}
+
+.step {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.step:last-child {
+  border-bottom: none;
+}
+
+.step__num {
+  width: 34px;
+  height: 34px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, rgba(124, 240, 201, 0.3), rgba(123, 164, 255, 0.3));
+  color: #0b1021;
+  font-weight: 800;
+}
+
+.faq {
+  display: grid;
+  gap: 12px;
+}
+
+.faq__item {
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--card-2);
+}
+
+.faq__question {
+  font-weight: 700;
+  color: #e2e8f0;
+  margin-bottom: 6px;
 }
 
 .table {
